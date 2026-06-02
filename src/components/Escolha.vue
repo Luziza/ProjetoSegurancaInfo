@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import useModulo, { useModulosEscolhido } from '@/api/composables/useModulo'
 import type { Modulos } from '@/types/modulo'
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import Perguntas2 from '@/components/Perguntas2.vue'
 import Perguntas1 from '@/components/Perguntas1.vue'
 
 const props = defineProps<{
   modulosMutation: ReturnType<typeof useModulo>
+  empresaCriada: number
 }>()
 
 const moduloEscolhido = ref<number>(0)
@@ -35,7 +36,7 @@ function selecionar(modulo: Modulos) {
 
     <div v-else>
       <Perguntas1 v-if="moduloEscolhido === 1" :modulosEscolha="modulosEscolha" />
-      <Perguntas2 v-else-if="moduloEscolhido === 2" :modulosEscolha="modulosEscolha" />
+      <Perguntas2 v-else-if="moduloEscolhido === 2" :modulosEscolha="modulosEscolha" :empresaCriada="props.empresaCriada" />
     </div>
   </div>
 </template>

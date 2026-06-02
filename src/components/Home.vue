@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Primeiro from '@/components/Primeiro.vue';
+import CriarUsuario from './Usuario/CriarUsuario.vue';
+import Login from './Usuario/Login.vue';
 </script>
 
 <template>
 
   <v-main>
-    <Primeiro />
+    <Login />
     <router-view />
   </v-main>
 

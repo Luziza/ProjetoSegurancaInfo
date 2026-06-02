@@ -8,9 +8,10 @@ const criarEmpresa = useEmpresa()
 const modulosMutation = useModulo()
 
 const abrirModulos = ref(false)
-
+const empresaCriada = ref<number>(0)
 
 const form = reactive({
+  id_empresa: 0,
   nome: '',
   cnpj: '',
   criado_em: '',
@@ -18,8 +19,17 @@ const form = reactive({
 })
 
 function enviar() {
-  criarEmpresa.mutate({ ...form })
-  abrirModulos.value = true
+  criarEmpresa.mutate(
+  { ...form },
+  {
+    onSuccess: (response) => {
+      console.log(response)
+
+      empresaCriada.value = response.data.id_empresa
+      abrirModulos.value = true
+    }
+  }
+)
 }
 
 function limpar() {
@@ -62,7 +72,7 @@ function limpar() {
     </form>
   </div>
   <div v-else>
-    <Escolha :modulosMutation="modulosMutation" />
+    <Escolha :modulosMutation="modulosMutation" :empresaCriada="empresaCriada" />
   </div>
 </template>
 
