@@ -41,18 +41,18 @@ function limpar() {
         <form @submit.prevent="enviar">
             <div class="inputs">
 
-                <v-text-field v-model="form.nome" label="Seu nome..." variant="outlined" density="compact"
+                <v-text-field v-model="form.nome" label="Seu nome...." variant="outlined" density="compact"
                     prepend-inner-icon="mdi-account" />
 
 
-                <v-text-field v-model="form.login" label="Login..." variant="outlined" density="compact"
+                <v-text-field v-model="form.login" label="Login...." variant="outlined" density="compact"
                     prepend-inner-icon="mdi-login" />
 
 
-                <v-text-field v-model="form.email" label="E-mail..." variant="outlined" density="compact"
+                <v-text-field v-model="form.email" label="E-mail...." variant="outlined" density="compact"
                     prepend-inner-icon="mdi-at" />
 
-                <v-text-field v-model="form.senha" label="Senha..." variant="outlined" density="compact"
+                <v-text-field v-model="form.senha" label="Senha...." variant="outlined" density="compact"
                     prepend-inner-icon="mdi-lock" />
 
             </div>
