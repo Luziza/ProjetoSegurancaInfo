@@ -14,8 +14,8 @@ const form = reactive({
   id_empresa: 0,
   nome: '',
   cnpj: '',
-  criado_em: '',
-  nome_user: ''
+  nome_user: '',
+  id_usuario: 0,
 })
 
 function enviar() {

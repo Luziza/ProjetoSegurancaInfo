@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useEmpresa } from '@/api/composables/useEmpresa'
-import useModulo from '@/api/composables/useModulo'
 import { useCreateUsuario } from '@/api/composables/useUsuario'
 import { reactive, ref } from 'vue'
 import Primeiro from '../Primeiro.vue'
@@ -11,7 +10,8 @@ const form = reactive({
     nome: '',
     login: '',
     email: '',
-    senha: ''
+    senha: '',
+    empresa: null as any,
 })
 
 function enviar() {
