@@ -3,6 +3,7 @@ import { useEmpresa } from '@/api/composables/useEmpresa'
 import useModulo from '@/api/composables/useModulo'
 import { reactive, ref } from 'vue'
 import Escolha from './Escolha.vue'
+import type { Usuario } from '@/types/usuario.ts'
 
 const criarEmpresa = useEmpresa()
 const modulosMutation = useModulo()
@@ -10,32 +11,44 @@ const modulosMutation = useModulo()
 const abrirModulos = ref(false)
 const empresaCriada = ref<number>(0)
 
+const props = defineProps<{
+  usuario: Usuario
+}>()
+
 const form = reactive({
   id_empresa: 0,
   nome: '',
   cnpj: '',
   nome_user: '',
-  id_usuario: 0,
+  resposta: [],
+  id_usuario: props.usuario.id_usuario
 })
 
 function enviar() {
   criarEmpresa.mutate(
-  { ...form },
-  {
-    onSuccess: (response) => {
-      console.log(response)
+    { ...form },
+    {
+      onSuccess: (response) => {
+        console.log(response)
 
-      empresaCriada.value = response.data.id_empresa
-      abrirModulos.value = true
+        empresaCriada.value = response.data.id_empresa
+        abrirModulos.value = true
+      }
     }
-  }
-)
+  )
+}
+
+function selecionarEmpresa(id_empresa: number) {
+  abrirModulos.value = true
+  empresaCriada.value = id_empresa
+  console.log(empresaCriada.value)
 }
 
 function limpar() {
   form.nome = ''
   form.cnpj = ''
   form.nome_user = ''
+  form.resposta = []
 }
 
 </script>
@@ -70,6 +83,11 @@ function limpar() {
         </v-btn>
       </div>
     </form>
+    <div v-for="empresa in usuario.empresas" :key="empresa.id_empresa">
+      <h3>{{ empresa.nome }}</h3>
+      <p>CNPJ: {{ empresa.cnpj }}</p>
+      <v-btn @click="selecionarEmpresa(empresa.id_empresa)">Selecionar empresa</v-btn>
+    </div>
   </div>
   <div v-else>
     <Escolha :modulosMutation="modulosMutation" :empresaCriada="empresaCriada" />

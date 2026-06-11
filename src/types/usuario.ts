@@ -1,10 +1,11 @@
 import type { EmpresaResponse } from "./empresa"
 
 export type Usuario = {
+    id_usuario: number,
     nome: string,
     email: string,
     senha: string,
-    empresa: EmpresaResponse[]
+    empresas: EmpresaResponse[]
 }
 
 export type UsuarioLogin = {

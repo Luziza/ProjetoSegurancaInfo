@@ -26,7 +26,6 @@ const salvar = () => {
       nao_aplica: resposta === 'NAO_APLICA'
     })
   )
-console.log(JSON.stringify(payload, null, 2))
   respostaMutation.mutate(payload)
 }
 </script>

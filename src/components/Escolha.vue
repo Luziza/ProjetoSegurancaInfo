@@ -19,6 +19,7 @@ const modulosEscolha = useModulosEscolhido(moduloEscolhido)
 function selecionar(modulo: Modulos) {
   moduloEscolhido.value = modulo.tipo_pergunta
   abrirModulos.value = true
+  console.log(props.empresaCriada)
 }
 </script>
 

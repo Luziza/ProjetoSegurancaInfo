@@ -5,7 +5,7 @@ const ENDPOINT = 'empresa'
 
 export default {
   cadastrar(empresa: EmpresaResponse) {
-    return instance.post<EmpresaResponse>(`/${ENDPOINT}`, empresa)
+    return instance.post<EmpresaResponse>(`/${ENDPOINT}/cadastrar`, empresa)
   },
 
   listar() {

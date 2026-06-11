@@ -31,13 +31,19 @@ export function useLoginUsuario(onFinish?: () => void) {
   const { show } = useToast()
 
   return useMutation({
-    mutationFn: (usuarioLogin: UsuarioLogin) => usuarioService.loginUsuario(usuarioLogin),
-    onSuccess: () => {
+    mutationFn: (usuarioLogin: UsuarioLogin) =>
+      usuarioService.loginUsuario(usuarioLogin),
+
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['respostas'] })
+
+      console.log(data) // resposta do backend
+
       show('Login realizado com sucesso!', 'info')
 
       if (onFinish) onFinish()
     },
+
     onError: () => {
       show('Erro ao realizar login', 'error')
     }

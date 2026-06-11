@@ -2,8 +2,9 @@
 import { useEmpresa } from '@/api/composables/useEmpresa'
 import useModulo from '@/api/composables/useModulo'
 import { useCreateUsuario, useLoginUsuario } from '@/api/composables/useUsuario'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import Primeiro from '../Primeiro.vue'
+import type { Usuario } from '@/types/usuario.ts'
 
 const usuarioMutation = useLoginUsuario()
 const abrirSite = ref(false)
@@ -11,16 +12,21 @@ const form = reactive({
     login: '',
     senha: ''
 })
+const usuario = ref<Usuario>({} as Usuario)
+
 
 function enviar() {
-    usuarioMutation.mutate(
-        { ...form },
-        {
-            onSuccess: () => {
-                abrirSite.value = true
-            }
-        }
-    )
+  usuarioMutation.mutate(
+    { ...form },
+    {
+      onSuccess: (response) => {
+        console.log(response)
+
+        usuario.value = response.data
+        abrirSite.value = true
+      }
+    }
+  )
 }
 
 function limpar() {
@@ -86,7 +92,7 @@ function limpar() {
     </div>
 
     <div v-else>
-        <Primeiro />
+        <Primeiro :usuario = "usuario"/>
     </div>
 </template>
 
