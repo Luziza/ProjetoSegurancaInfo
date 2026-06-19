@@ -18,12 +18,14 @@ const salvar = () => {
   const payload = Object.entries(respostas.value).map(
     ([id_pergunta, resposta]) => ({
       id_pergunta: Number(id_pergunta),
-      id_empresa: props.empresaCriada, // empresa logada
+      id_empresa: props.empresaCriada,
 
       sim: resposta === 'SIM',
       nao: resposta === 'NAO',
       em_andamento: resposta === 'EM_ANDAMENTO',
-      nao_aplica: resposta === 'NAO_APLICA'
+      nao_aplica: resposta === 'NAO_APLICA',
+
+      data: new Date().toISOString()
     })
   )
   respostaMutation.mutate(payload)
@@ -32,23 +34,16 @@ const salvar = () => {
 
 <template>
   <ul>
-    <li
-  v-for="pergunta in modulosEscolha.data.value?.perguntas"
-  :key="pergunta.id_pergunta"
->
-  <p>{{ pergunta.pergunta }}</p>
+    <li v-for="pergunta in modulosEscolha.data.value?.perguntas" :key="pergunta.id_pergunta">
+      <p>{{ pergunta.pergunta }}</p>
 
-  <v-radio-group
-    v-model="respostas[pergunta.id_pergunta]"
-    inline
-  >
-    <v-radio label="Sim" value="SIM" />
-    <v-radio label="Não" value="NAO" />
-    <v-radio label="Em andamento" value="EM_ANDAMENTO" />
-    <v-radio label="Não se aplica" value="NAO_APLICA" />
-  </v-radio-group>
-</li>
+      <v-radio-group v-model="respostas[pergunta.id_pergunta]" inline>
+        <v-radio label="Sim" value="SIM" />
+        <v-radio label="Não" value="NAO" />
+        <v-radio label="Em andamento" value="EM_ANDAMENTO" />
+        <v-radio label="Não se aplica" value="NAO_APLICA" />
+      </v-radio-group>
+    </li>
   </ul>
   <v-btn @click="salvar">Salvar</v-btn>
 </template>
-

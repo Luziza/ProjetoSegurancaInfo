@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Primeiro from '@/components/Primeiro.vue';
-import CriarUsuario from './Usuario/CriarUsuario.vue';
-import Login from './Usuario/Login.vue';
+import CriarUsuario from './usuario/CriarUsuario.vue';
+import Login from './usuario/Login.vue';
 </script>
 
 <template>

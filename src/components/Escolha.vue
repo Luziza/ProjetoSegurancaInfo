@@ -36,7 +36,7 @@ function selecionar(modulo: Modulos) {
     </div>
 
     <div v-else>
-      <Perguntas1 v-if="moduloEscolhido === 1" :modulosEscolha="modulosEscolha" />
+      <Perguntas1 v-if="moduloEscolhido === 1" :modulosEscolha="modulosEscolha" :empresaCriada="props.empresaCriada" />
       <Perguntas2 v-else-if="moduloEscolhido === 2" :modulosEscolha="modulosEscolha" :empresaCriada="props.empresaCriada" />
     </div>
   </div>

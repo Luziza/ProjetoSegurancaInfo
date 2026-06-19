@@ -68,7 +68,7 @@ function limpar() {
                     />
 
                 </div>
-
+                <router-link to="/cadastro">Não possui cadastro?</router-link>
                 <div class="botoes">
                     <v-btn
                         variant="outlined"

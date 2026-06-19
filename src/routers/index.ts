@@ -13,7 +13,16 @@ const router = createRouter({
       name: 'escolha',
       component: () => import('@/components/Escolha.vue')
     },
-
+    {
+       path: '/cadastro',
+      name: 'cadastro',
+      component: () => import('@/components/usuario/CriarUsuario.vue')
+    },
+    {
+       path: '/a',
+      name: 'a',
+      component: () => import('@/components/Dashbord.vue')
+    }
   ]
 })
 export default router 

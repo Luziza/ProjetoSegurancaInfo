@@ -11,7 +11,8 @@ const form = reactive({
     login: '',
     email: '',
     senha: '',
-    empresa: null as any,
+    empresas: [],
+    id_usuario: 0
 })
 
 function enviar() {
@@ -23,6 +24,7 @@ function enviar() {
             }
         }
     )
+    
 }
 
 function limpar() {
@@ -35,7 +37,6 @@ function limpar() {
 </script>
 
 <template>
-    <div v-if="abrirSite == false" class="card-modal">
         <div class="titulo">Cadastrar Usuário</div>
 
         <form @submit.prevent="enviar">
@@ -67,10 +68,7 @@ function limpar() {
                 </v-btn>
             </div>
         </form>
-    </div>
-    <div v-else>
-        <Primeiro/>
-    </div>
+    
 </template>
 
 <style scoped>

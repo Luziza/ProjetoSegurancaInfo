@@ -5,4 +5,5 @@ export type Resposta = {
     id_pergunta: number
     id_empresa: number
     nao_aplica: boolean
+    data: string
 }[]
