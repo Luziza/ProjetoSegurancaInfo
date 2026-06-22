@@ -19,7 +19,7 @@ const props = defineProps<{
 }>()
 
 const form = reactive({
-  id_empresa: 0,
+  idEmpresa: 0,
   nome: '',
   cnpj: '',
   nome_user: '',
@@ -34,21 +34,21 @@ function enviar() {
       onSuccess: (response) => {
         console.log(response)
 
-        empresaCriada.value = response.data.id_empresa
+        empresaCriada.value = response.data.idEmpresa
         abrirModulos.value = true
       }
     }
   )
 }
 
-function selecionarEmpresa(id_empresa: number) {
+function selecionarEmpresa(idEmpresa: number) {
   abrirModulos.value = true
-  empresaCriada.value = id_empresa
+  empresaCriada.value = idEmpresa
 }
 
-function selecionarEmpresaDash(id_empresa: number) {
+function selecionarEmpresaDash(idEmpresa: number) {
   abrirDash.value = true
-  empresaCriada.value = id_empresa
+  empresaCriada.value = idEmpresa
   console.log(abrirDash.value)
 
 }
@@ -131,7 +131,7 @@ function limpar() {
 
         <div
           v-for="empresa in usuario.empresas"
-          :key="empresa.id_empresa"
+          :key="empresa.idEmpresa"
           class="empresa-card"
         >
           <div class="empresa-info">
@@ -146,7 +146,7 @@ function limpar() {
           <v-btn
             color="primary"
             variant="tonal"
-            @click="selecionarEmpresa(empresa.id_empresa)"
+            @click="selecionarEmpresa(empresa.idEmpresa)"
           >
             Responder questionário
           </v-btn>
@@ -154,7 +154,7 @@ function limpar() {
            <v-btn
             color="primary"
             variant="tonal"
-            @click="selecionarEmpresaDash(empresa.id_empresa)"
+            @click="selecionarEmpresaDash(empresa.idEmpresa)"
             
           >
             Dashboard

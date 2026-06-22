@@ -3,13 +3,13 @@ import useToast from "./userToast"
 import type { AvaliacaoResponse } from "@/types/avaliacao"
 import avaliacaoService from "../services/avaliacao.service"
 
-export default function useAvaliacao() {
+export default function useAvaliacao(id: number) {
   const { show } = useToast()
 
   return useQuery<AvaliacaoResponse[]>({
-    queryKey: ['modulos'],
+    queryKey: ['avaliacao', id],
     queryFn: async () => {
-      const response = await avaliacaoService.listar()
+      const response = await avaliacaoService.listar(id)
       return response.data
     },
   })

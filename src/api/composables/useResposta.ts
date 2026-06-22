@@ -11,7 +11,7 @@ export function useCreateResposta(onFinish?: () => void) {
   const { show } = useToast()
 
   return useMutation({
-    mutationFn: (resposta: Resposta) => respostaService.cadastrarResposta(resposta),
+    mutationFn: (resposta: Resposta[]) => respostaService.cadastrarResposta(resposta),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['respostas'] })
       show('Resposta criada com sucesso!', 'info')

@@ -18,7 +18,7 @@ const salvar = () => {
   const payload = Object.entries(respostas.value).map(
     ([id_pergunta, resposta]) => ({
       id_pergunta: Number(id_pergunta),
-      id_empresa: props.empresaCriada,
+      idEmpresa: props.empresaCriada,
 
       sim: resposta === 'SIM',
       nao: resposta === 'NAO',

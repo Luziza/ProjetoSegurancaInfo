@@ -4,7 +4,7 @@ import type { AvaliacaoResponse } from "@/types/avaliacao"
 const ENDPOINT = 'avaliacao'
 
 export default {
-  listar() {
-    return instance.get<AvaliacaoResponse[]>(`/${ENDPOINT}`)
+  listar(id: number) {
+    return instance.get<AvaliacaoResponse[]>(`/${ENDPOINT}/${id}`)
   }
 }

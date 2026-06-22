@@ -3,7 +3,6 @@ export type Resposta = {
     nao: boolean
     em_andamento: boolean
     id_pergunta: number
-    id_empresa: number
+    idEmpresa: number
     nao_aplica: boolean
-    data: string
-}[]
+}

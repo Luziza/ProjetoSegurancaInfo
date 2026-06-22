@@ -17,14 +17,14 @@ const salvar = () => {
   const payload = Object.entries(respostas.value).map(
     ([id_pergunta, resposta]) => ({
       id_pergunta: Number(id_pergunta),
-      id_empresa: props.empresaCriada,
+      idEmpresa: props.empresaCriada,
+      nome: props.modulosEscolha.data.value?.nome,
+      tipo_pergunta: props.modulosEscolha.data.value?.tipo_pergunta,
 
       sim: resposta === 'SIM',
       nao: resposta === 'NAO',
       em_andamento: resposta === 'EM_ANDAMENTO',
       nao_aplica: resposta === 'NAO_APLICA',
-
-      data: new Date().toISOString()
     })
   )
   respostaMutation.mutate(payload)
