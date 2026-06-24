@@ -22,7 +22,7 @@ function enviar() {
       onSuccess: (response) => {
         console.log(response)
 
-        usuario.value = response.data
+        usuario.value = response.data.usuario
         abrirSite.value = true
       }
     }
@@ -32,6 +32,12 @@ function enviar() {
 function limpar() {
     form.login = ''
     form.senha = ''
+}
+
+function onLogout() {
+    abrirSite.value = false
+    usuario.value = {} as Usuario
+    limpar()
 }
 
 </script>
@@ -92,7 +98,7 @@ function limpar() {
     </div>
 
     <div v-else>
-        <Primeiro :usuario = "usuario"/>
+        <Primeiro :usuario="usuario" @logout="onLogout" />
     </div>
 </template>
 

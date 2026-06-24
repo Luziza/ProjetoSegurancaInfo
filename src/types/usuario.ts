@@ -11,4 +11,10 @@ export type Usuario = {
 export type UsuarioLogin = {
     login: string,
     senha: string,
+    
+}
+
+export type UsuarioToken = {
+    token: string,
+    usuario: Usuario
 }

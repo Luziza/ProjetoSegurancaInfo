@@ -5,6 +5,7 @@ import { reactive, ref } from 'vue'
 import Escolha from './Escolha.vue'
 import type { Usuario } from '@/types/usuario.ts'
 import Dashbord from './Dashbord.vue'
+import { logoutUsuario } from '@/api/composables/useUsuario'
 
 const criarEmpresa = useEmpresa()
 const modulosMutation = useModulo()
@@ -13,6 +14,8 @@ const abrirModulos = ref(false)
 const empresaCriada = ref<number>(0)
 
 const abrirDash = ref(false)
+
+const emit = defineEmits(['logout'])
 
 const props = defineProps<{
   usuario: Usuario
@@ -53,6 +56,10 @@ function selecionarEmpresaDash(idEmpresa: number) {
 
 }
 
+function logout() {
+  logoutUsuario()
+  emit('logout')
+}
 
 function limpar() {
   form.nome = ''
@@ -73,6 +80,9 @@ function limpar() {
           <h2>Nova Empresa</h2>
           <p>Cadastre uma nova empresa ou selecione uma existente.</p>
         </div>
+        <v-btn color="error" variant="text" class="logout-button" @click="logout">
+          Sair
+        </v-btn>
       </div>
 
       <v-divider class="my-4" />

@@ -1,11 +1,13 @@
 import { useQueryClient, useMutation } from "@tanstack/vue-query";
 import useToast from "./userToast";
+import type { AxiosResponse } from "axios";
 import type { EmpresaResponse } from "@/types/empresa";
 import empresaService from "../services/empresa.service";
 import respostaService from "../services/resposta.service";
 import type { Resposta } from "@/types/resposta";
 import usuarioService from "../services/usuario.service";
-import type { Usuario, UsuarioLogin } from "@/types/usuario";
+import { setAuthToken } from "../services/http/axios";
+import type { Usuario, UsuarioLogin, UsuarioToken } from "@/types/usuario";
 
 
 export function useCreateUsuario(onFinish?: () => void) {
@@ -25,12 +27,14 @@ export function useCreateUsuario(onFinish?: () => void) {
     }
   })
 }
-
+export function logoutUsuario() {
+  setAuthToken(null)
+}
 export function useLoginUsuario(onFinish?: () => void) {
   const queryClient = useQueryClient()
   const { show } = useToast()
 
-  return useMutation({
+  return useMutation<AxiosResponse<UsuarioToken>, unknown, UsuarioLogin>({
     mutationFn: (usuarioLogin: UsuarioLogin) =>
       usuarioService.loginUsuario(usuarioLogin),
 
@@ -38,6 +42,10 @@ export function useLoginUsuario(onFinish?: () => void) {
       queryClient.invalidateQueries({ queryKey: ['respostas'] })
 
       console.log(data) // resposta do backend
+
+      if (data.data?.token) {
+        setAuthToken(data.data.token)
+      }
 
       show('Login realizado com sucesso!', 'info')
 

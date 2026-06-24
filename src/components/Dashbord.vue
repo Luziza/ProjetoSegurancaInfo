@@ -101,7 +101,7 @@ const mediaGeral = computed(() => calcularMedia(avaliacoesGerais.value))
     </v-row>
 
     <!-- Módulo 2 -->
-    <h2 class="my-2">Módulo 2</h2>
+    <h2 class="my-2">Módulo 2 </h2>
     <p class="text-h4 mb-4">Média de conformidade: {{ mediaModulo2 }}%</p>
 
     <v-row>

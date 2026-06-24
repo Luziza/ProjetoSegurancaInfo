@@ -1,5 +1,5 @@
 import instance from "./http/axios"
-import type { Usuario, UsuarioLogin } from "@/types/usuario"
+import type { Usuario, UsuarioLogin, UsuarioToken } from "@/types/usuario"
 
 
 const ENDPOINT = 'usuario'
@@ -10,6 +10,6 @@ export default {
   },
 
   loginUsuario(usuarioLogin: UsuarioLogin) {
-    return instance.post(`${ENDPOINT}/login`, usuarioLogin)
+    return instance.post<UsuarioToken>(`${ENDPOINT}/login`, usuarioLogin)
   }
 }
