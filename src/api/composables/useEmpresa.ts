@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/vue-query";
 import useToast from "./userToast";
-import type { EmpresaResponse } from "@/types/empresa";
+import type { EmpresaRequest, EmpresaResponse } from "@/types/empresa";
 import empresaService from "../services/empresa.service";
 
 
@@ -9,7 +9,7 @@ export function useEmpresa(onFinish?: () => void) {
   const { show } = useToast()
 
   return useMutation({
-    mutationFn: (empresa: EmpresaResponse) => empresaService.cadastrar(empresa),
+    mutationFn: (empresa: EmpresaRequest) => empresaService.cadastrar(empresa),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['empresas'] })
       show('Empresa criada com sucesso!', 'info')

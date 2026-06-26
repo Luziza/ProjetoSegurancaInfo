@@ -29,6 +29,7 @@ export function useCreateUsuario(onFinish?: () => void) {
 }
 export function logoutUsuario() {
   setAuthToken(null)
+  localStorage.removeItem('authUser')
 }
 export function useLoginUsuario(onFinish?: () => void) {
   const queryClient = useQueryClient()
@@ -45,6 +46,10 @@ export function useLoginUsuario(onFinish?: () => void) {
 
       if (data.data?.token) {
         setAuthToken(data.data.token)
+      }
+
+      if (data.data?.usuario) {
+        localStorage.setItem('authUser', JSON.stringify(data.data.usuario))
       }
 
       show('Login realizado com sucesso!', 'info')

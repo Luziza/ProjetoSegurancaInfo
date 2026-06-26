@@ -7,3 +7,9 @@ export type EmpresaResponse ={
     id_usuario: number,
     resposta: Resposta[]
 }
+
+export type EmpresaRequest = {
+    nome: String,
+    cnpj: String,
+    id_usuario: number
+}

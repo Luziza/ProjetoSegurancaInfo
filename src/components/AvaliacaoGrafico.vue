@@ -43,17 +43,22 @@ const conformidade = computed(() => {
     return Number(((conformes / respostasValidas.length) * 100).toFixed(1))
 })
 
-const corConformidade = computed(() => {
-    if (conformidade.value >= 80) return 'success'
-    if (conformidade.value >= 50) return 'warning'
-    return 'error'
+const statusConformidade = computed(() => {
+    if (conformidade.value >= 80) return 'alta'
+    if (conformidade.value >= 50) return 'media'
+    return 'baixa'
 })
+
+const dataFormatada = computed(() =>
+    new Date(props.avaliacao.data).toLocaleDateString('pt-BR')
+)
 
 const chartData = computed(() => ({
     labels: ['Sim', 'Não', 'Em andamento', 'Não se aplica'],
     datasets: [
         {
-            backgroundColor: ['#4CAF50', '#F44336', '#FFC107', '#9E9E9E'],
+            backgroundColor: ['#22a35d', '#e5484d', '#f0a93a', '#94a3b8'],
+            borderWidth: 0,
             data: [
                 contagem.value.sim,
                 contagem.value.nao,
@@ -68,7 +73,16 @@ const chartOptions = {
     responsive: true,
     maintainAspectRatio: true,
     plugins: {
-        legend: { position: 'bottom' as const },
+        legend: {
+            position: 'bottom' as const,
+            labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 12,
+                font: { size: 11 },
+                color: '#64748b',
+            },
+        },
         tooltip: {
             callbacks: {
                 label: (ctx: any) => {
@@ -87,17 +101,85 @@ const chartOptions = {
 </script>
 
 <template>
-    <v-card>
-        <v-card-title class="text-subtitle-1 d-flex justify-space-between align-center">
-            <span>{{ new Date(avaliacao.data).toLocaleDateString('pt-BR') }}</span>
+    <div class="avaliacao-card">
+        <div class="avaliacao-header">
+            <span class="avaliacao-data">
+                <v-icon size="16" color="#64748b">mdi-calendar-blank-outline</v-icon>
+                {{ dataFormatada }}
+            </span>
 
-            <v-chip :color="corConformidade" variant="flat" size="small">
+            <span class="conformidade-badge" :class="statusConformidade">
                 {{ conformidade }}% conforme
-            </v-chip>
-        </v-card-title>
+            </span>
+        </div>
 
-        <v-card-text>
+        <div class="avaliacao-chart">
             <Pie :data="chartData" :options="chartOptions" />
-        </v-card-text>
-    </v-card>
+        </div>
+    </div>
 </template>
+
+<style scoped>
+.avaliacao-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.avaliacao-card:hover {
+    box-shadow: 0 6px 18px rgba(20, 40, 80, 0.08);
+    transform: translateY(-2px);
+}
+
+.avaliacao-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.avaliacao-data {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.conformidade-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.conformidade-badge.alta {
+    background: #e3f6ea;
+    color: #1e8a4c;
+}
+
+.conformidade-badge.media {
+    background: #fdf1dc;
+    color: #b3760f;
+}
+
+.conformidade-badge.baixa {
+    background: #fbe7e7;
+    color: #c5333a;
+}
+
+.avaliacao-chart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>

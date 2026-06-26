@@ -1,33 +1,62 @@
 <script setup lang="ts">
 import { useEmpresa } from '@/api/composables/useEmpresa'
 import useModulo from '@/api/composables/useModulo'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Escolha from './Escolha.vue'
 import type { Usuario } from '@/types/usuario.ts'
-import Dashbord from './Dashbord.vue'
 import { logoutUsuario } from '@/api/composables/useUsuario'
 
 const criarEmpresa = useEmpresa()
 const modulosMutation = useModulo()
+const abrirEscolha = ref(false)
 
 const abrirModulos = ref(false)
 const empresaCriada = ref<number>(0)
 
-const abrirDash = ref(false)
-
 const emit = defineEmits(['logout'])
+const router = useRouter()
 
 const props = defineProps<{
-  usuario: Usuario
+  usuario?: Usuario
 }>()
 
+const storedUser = computed<Usuario>(() => {
+  const saved = localStorage.getItem('authUser')
+
+  if (props.usuario) {
+    return props.usuario
+  }
+
+  if (saved) {
+    try {
+      return JSON.parse(saved) as Usuario
+    } catch {
+      return {
+        id_usuario: 0,
+        nome: '',
+        email: '',
+        senha: '',
+        empresas: []
+      }
+    }
+  }
+
+  return {
+    id_usuario: 0,
+    nome: '',
+    email: '',
+    senha: '',
+    empresas: []
+  }
+})
+
+const usuario = storedUser
+
 const form = reactive({
-  idEmpresa: 0,
   nome: '',
   cnpj: '',
-  nome_user: '',
-  resposta: [],
-  id_usuario: props.usuario.id_usuario
+  id_usuario: storedUser.value.id_usuario
 })
 
 function enviar() {
@@ -36,277 +65,340 @@ function enviar() {
     {
       onSuccess: (response) => {
         console.log(response)
-
         empresaCriada.value = response.data.idEmpresa
-        abrirModulos.value = true
       }
     }
   )
 }
 
 function selecionarEmpresa(idEmpresa: number) {
-  abrirModulos.value = true
   empresaCriada.value = idEmpresa
+  abrirEscolha.value = true
 }
 
 function selecionarEmpresaDash(idEmpresa: number) {
-  abrirDash.value = true
   empresaCriada.value = idEmpresa
-  console.log(abrirDash.value)
-
+  router.push({ name: 'dashboard', query: { empresaCriada: String(idEmpresa) } })
 }
 
 function logout() {
   logoutUsuario()
+  localStorage.removeItem('authUser')
+  router.push({ name: 'login' })
   emit('logout')
 }
 
 function limpar() {
   form.nome = ''
   form.cnpj = ''
-  form.nome_user = ''
-  form.resposta = []
 }
 
 </script>
 
 <template>
-  <div v-if="!abrirModulos && !abrirDash" class="container">
-    <div class="card-modal">
+  <div v-if="!abrirModulos" class="page">
 
-      <div class="header">
-        <v-icon size="32" color="primary">mdi-domain-plus</v-icon>
-        <div>
-          <h2>Nova Empresa</h2>
-          <p>Cadastre uma nova empresa ou selecione uma existente.</p>
-        </div>
-        <v-btn color="error" variant="text" class="logout-button" @click="logout">
-          Sair
-        </v-btn>
+    <header class="navbar">
+      <div class="navbar-brand">
+        <span class="brand-icon">
+          <v-icon size="20" color="white">mdi-shield-check</v-icon>
+        </span>
+
+        <span class="brand-name">ConformISO</span>
       </div>
 
-      <v-divider class="my-4" />
+      <nav class="navbar-links">
+        <RouterLink to="/home" class="nav-link">
+          <v-icon size="18">mdi-home-outline</v-icon>
+          Home
+        </RouterLink>
+      </nav>
 
-      <form @submit.prevent="enviar">
-        <div class="inputs">
-          <v-text-field
-            v-model="form.nome"
-            label="Nome da empresa"
-            variant="outlined"
-            density="comfortable"
-            prepend-inner-icon="mdi-domain"
-          />
+      <v-btn variant="text" class="logout-button" prepend-icon="mdi-logout-variant" @click="logout">
+        Sair
+      </v-btn>
+    </header>
 
-          <v-text-field
-            v-model="form.nome_user"
-            label="Seu nome"
-            variant="outlined"
-            density="comfortable"
-            prepend-inner-icon="mdi-account"
-          />
 
-          <v-text-field
-            v-model="form.cnpj"
-            label="CNPJ"
-            placeholder="12.345.678/0001-99"
-            variant="outlined"
-            density="comfortable"
-            prepend-inner-icon="mdi-card-account-details"
-          />
+    <!-- CONTEÚDO -->
+    <main class="content">
+
+      <div class="page-header">
+        <div>
+          <h1>Empresas cadastradas</h1>
+          <p>
+            Avalie a conformidade com ISO 27001 e acompanhe seus resultados.
+          </p>
         </div>
 
-        <div class="botoes">
-          <v-btn
-            variant="outlined"
-            color="error"
-            @click="limpar"
-          >
-            Cancelar
-          </v-btn>
+      </div>
 
-          <v-btn
-            type="submit"
-            color="primary"
-            :loading="criarEmpresa.isPending.value"
-          >
-            Salvar Empresa
-          </v-btn>
-        </div>
-      </form>
+      <!-- FORMULÁRIO -->
+      <v-card class="mb-6" rounded="xl">
+        <v-card-title>
+          Cadastro de Empresa
+        </v-card-title>
 
-      <v-divider class="my-6" />
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-text-field v-model="form.nome" label="Empresa" variant="outlined" />
+            </v-col>
 
-      <div class="empresas-section">
-        <h3>Empresas Vinculadas</h3>
+            <v-col cols="12" md="4">
+              <v-text-field v-model="form.cnpj" label="CNPJ" variant="outlined" />
+            </v-col>
+          </v-row>
 
-        <div
-          v-for="empresa in usuario.empresas"
-          :key="empresa.idEmpresa"
-          class="empresa-card"
-        >
-          <div class="empresa-info">
-            <v-icon color="primary">mdi-office-building</v-icon>
+          <div class="actions">
+            <v-btn variant="outlined" @click="limpar">
+              Limpar
+            </v-btn>
 
-            <div>
-              <strong>{{ empresa.nome }}</strong>
-              <span>{{ empresa.cnpj }}</span>
+            <v-btn color="primary" @click="enviar" :loading="criarEmpresa.isPending.value">
+              Salvar
+            </v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+
+      <!-- EMPRESAS -->
+      <v-card rounded="xl">
+
+        <template v-if="usuario.empresas.length">
+
+          <v-list>
+
+            <v-list-item v-for="empresa in usuario.empresas" :key="empresa.idEmpresa" class="empresa-item">
+              <template #prepend>
+                <v-avatar color="primary" size="40">
+                  <v-icon>mdi-domain</v-icon>
+                </v-avatar>
+              </template>
+
+              <v-list-item-title>
+                {{ empresa.nome }}
+              </v-list-item-title>
+
+              <v-list-item-subtitle>
+                {{ empresa.cnpj }}
+              </v-list-item-subtitle>
+
+              <template #append>
+
+                <v-btn color="primary" variant="tonal" class="mr-2" @click="selecionarEmpresa(empresa.idEmpresa)">
+                  Questionário
+                </v-btn>
+
+                <v-btn color="primary" @click="selecionarEmpresaDash(empresa.idEmpresa)">
+                  Dashboard
+                </v-btn>
+
+              </template>
+
+            </v-list-item>
+
+          </v-list>
+
+        </template>
+
+        <template v-else>
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+              <v-icon size="48">
+                mdi-office-building-outline
+              </v-icon>
             </div>
+
+            <h2>Nenhuma empresa cadastrada</h2>
+
+            <p>
+              Cadastre sua primeira empresa para começar a avaliação.
+            </p>
+
+            <v-btn color="primary" @click="$el.querySelector('input')?.focus()">
+              Cadastrar empresa
+            </v-btn>
+
           </div>
 
-          <v-btn
-            color="primary"
-            variant="tonal"
-            @click="selecionarEmpresa(empresa.idEmpresa)"
-          >
-            Responder questionário
-          </v-btn>
+        </template>
 
-           <v-btn
-            color="primary"
-            variant="tonal"
-            @click="selecionarEmpresaDash(empresa.idEmpresa)"
-            
-          >
-            Dashboard
-          </v-btn>
-        </div>
-      </div>
+      </v-card>
 
-    </div>
+    </main>
   </div>
 
-  <div v-else-if="abrirModulos">
-    <Escolha
-      :modulosMutation="modulosMutation"
-      :empresaCriada="empresaCriada"
-    />
-  </div>
+  <v-dialog v-model="abrirEscolha">
+    <v-card class="d-flex align-center justify-center pa-4">
+      <Escolha :modulosMutation="modulosMutation" :empresaCriada="empresaCriada" @fechar="abrirEscolha = false" />
+    </v-card>
+  </v-dialog>
 
-  <div v-else>
-    <Dashbord :empresaCriada="empresaCriada" />
-  </div>
+
 </template>
 
 <style scoped>
-.container {
+.escolha {
+  height: 100px;
+  width: 100px;
+}
+
+.page {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f5f7fa;
-  padding: 24px;
+  background: #f8fafc;
 }
 
-.card-modal {
-  width: 100%;
-  max-width: 800px;
+.topbar {
+  height: 72px;
   background: white;
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.08),
-    0 4px 10px rgba(0, 0, 0, 0.04);
-}
+  border-bottom: 1px solid #e2e8f0;
 
-.header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+
+  padding: 0 32px;
 }
 
-.header h2 {
-  margin: 0;
-  font-size: 1.6rem;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 20px;
   font-weight: 700;
-  color: #1e293b;
 }
 
-.header p {
-  margin: 4px 0 0;
-  color: #64748b;
-  font-size: 0.95rem;
-}
-
-.inputs {
+.menu {
   display: flex;
-  flex-direction: column;
   gap: 16px;
 }
 
-.botoes {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+.content {
+  max-width: 1300px;
+  margin: auto;
+  padding: 32px;
 }
 
-.empresas-section h3 {
-  margin-bottom: 16px;
-  color: #334155;
-  font-size: 1.1rem;
-}
-
-.empresas-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.empresa-card {
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  transition: all 0.2s ease;
-  background: #fff;
+
+  margin-bottom: 24px;
 }
 
-.empresa-card:hover {
-  border-color: #1976d2;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(25, 118, 210, 0.12);
+.page-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.empresa-info {
+.page-header p {
+  color: #64748b;
+  margin-top: 8px;
+}
+
+.actions {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
-.empresa-info div {
+.empty-state {
+  min-height: 350px;
+
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  gap: 16px;
 }
 
-.empresa-info strong {
-  color: #1e293b;
-  font-size: 15px;
+.empty-icon {
+  width: 80px;
+  height: 80px;
+
+  border-radius: 50%;
+  background: #dbeafe;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #1d4ed8;
 }
 
-.empresa-info span {
+.empresa-item {
+  padding: 16px !important;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 14px 32px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #142850;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #142850;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
   color: #64748b;
-  font-size: 13px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-@media (max-width: 768px) {
-  .card-modal {
-    padding: 20px;
-  }
+.nav-link:hover {
+  background: #f1f5f9;
+  color: #142850;
+}
 
-  .empresa-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
+.nav-link.active {
+  background: #e8f1fc;
+  color: #142850;
+}
 
-  .botoes {
-    flex-direction: column;
-  }
-
-  .botoes .v-btn {
-    width: 100%;
-  }
+.logout-button {
+  color: #64748b !important;
 }
 </style>
