@@ -18,18 +18,18 @@ const usuario = ref<Usuario>({} as Usuario)
 
 
 function enviar() {
-  usuarioMutation.mutate(
-    { ...form },
-    {
-      onSuccess: (response) => {
-        console.log(response)
+    usuarioMutation.mutate(
+        { ...form },
+        {
+            onSuccess: (response) => {
+                console.log(response)
 
-        usuario.value = response.data.usuario
-        abrirSite.value = true
-        router.push('/home')
-      }
-    }
-  )
+                usuario.value = response.data.usuario
+                abrirSite.value = true
+                router.push('/home')
+            }
+        }
+    )
 }
 
 function limpar() {
@@ -46,134 +46,142 @@ function onLogout() {
 </script>
 
 <template>
-    <div v-if="!abrirSite" class="login-container">
-        <div class="card-modal">
+    <div v-if="!abrirSite" class="login-page">
 
-            <div class="logo">
-                <h1>PSI</h1>
-                <p>Sistema de Diagnóstico ISO 27001 / 27701</p>
+        <div class="login-card">
+
+            <div class="login-header">
+
+                <div class="logo">
+                    <v-icon size="34" color="white">
+                        mdi-shield-check
+                    </v-icon>
+                </div>
+
+                <h1>ConformISO</h1>
+
+                <p>
+                    Sistema de Diagnóstico de Conformidade<br>
+                    ISO 27001 e ISO 27701
+                </p>
+
             </div>
 
-            <div class="titulo">Entrar</div>
-
             <form @submit.prevent="enviar">
-                <div class="inputs">
 
-                    <v-text-field
-                        v-model="form.login"
-                        label="Login"
-                        variant="outlined"
-                        density="comfortable"
-                        prepend-inner-icon="mdi-account"
-                    />
+                <v-text-field v-model="form.login" label="Login" prepend-inner-icon="mdi-account-outline"
+                    variant="outlined" density="comfortable" />
 
-                    <v-text-field
-                        v-model="form.senha"
-                        label="Senha"
-                        type="password"
-                        variant="outlined"
-                        density="comfortable"
-                        prepend-inner-icon="mdi-lock"
-                    />
+                <v-text-field v-model="form.senha" label="Senha" prepend-inner-icon="mdi-lock-outline" type="password"
+                    variant="outlined" density="comfortable" />
 
-                </div>
-                <router-link to="/cadastro">Não possui cadastro?</router-link>
-                <div class="botoes">
-                    <v-btn
-                        variant="outlined"
-                        color="error"
-                        @click="limpar"
-                    >
+                <RouterLink class="cadastro-link" to="/cadastro">
+                    Não possui uma conta? Cadastre-se
+                </RouterLink>
+
+                <div class="acoes">
+
+                    <v-btn variant="outlined" @click="limpar">
                         Limpar
                     </v-btn>
 
-                    <v-btn
-                        type="submit"
-                        color="success"
-                        :loading="usuarioMutation.isPending.value"
-                    >
+                    <v-btn color="primary" type="submit" :loading="usuarioMutation.isPending.value">
                         Entrar
                     </v-btn>
+
                 </div>
+
             </form>
 
         </div>
+
     </div>
 
-    <div v-else>
-        <Primeiro :usuario="usuario" @logout="onLogout" />
-    </div>
+    <Primeiro v-else :usuario="usuario" @logout="onLogout" />
 </template>
 
 <style scoped>
-.card-modal {
-    width: 420px;
-    padding: 32px;
-    border-radius: 20px;
-    background: white;
+.login-page{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f8fafc;
+    padding:24px;
+}
+
+.login-card{
+    width:430px;
+    background:white;
+    border-radius:24px;
+    padding:40px;
+
     box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.08),
-        0 4px 10px rgba(0, 0, 0, 0.05);
+        0 10px 25px rgba(15,23,42,.08),
+        0 4px 8px rgba(15,23,42,.04);
 }
 
-.titulo {
-    font-size: 28px;
-    font-weight: 700;
-    text-align: center;
-    color: #1f2937;
-    margin-bottom: 25px;
+.login-header{
+    text-align:center;
+    margin-bottom:32px;
 }
 
-.inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.logo{
+    width:72px;
+    height:72px;
+
+    margin:auto;
+    margin-bottom:18px;
+
+    border-radius:18px;
+
+    background:#142850;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.botoes {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 24px;
+.login-header h1{
+    font-size:32px;
+    color:#142850;
+    font-weight:700;
+    margin-bottom:10px;
 }
 
-.login-container {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(
-        135deg,
-        #00995c 0%,
-        #00b86b 50%,
-        #00d67d 100%
-    );
-    padding: 20px;
+.login-header p{
+    color:#64748b;
+    line-height:1.6;
 }
 
-.logo {
-    text-align: center;
-    margin-bottom: 24px;
+.acoes{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:24px;
 }
 
-.logo h1 {
-    color: #00995c;
-    font-size: 32px;
-    font-weight: bold;
-    margin: 0;
+.cadastro-link{
+    display:block;
+    margin-top:10px;
+    text-align:right;
+
+    color:#2563eb;
+    text-decoration:none;
+    font-size:.9rem;
 }
 
-.logo p {
-    color: #6b7280;
-    margin-top: 8px;
-    font-size: 14px;
+.cadastro-link:hover{
+    text-decoration:underline;
 }
 
-:deep(.v-btn) {
-    border-radius: 10px;
-    font-weight: 600;
+:deep(.v-field){
+    border-radius:12px;
 }
 
-:deep(.v-field) {
-    border-radius: 12px;
+:deep(.v-btn){
+    border-radius:10px;
+    font-weight:600;
+    text-transform:none;
 }
 </style>

@@ -3,11 +3,20 @@ import { computed } from 'vue'
 import useAvaliacao from '@/api/composables/useAvaliacao'
 import type { AvaliacaoResponse } from '@/types/avaliacao'
 import AvaliacaoGrafico from '@/components/AvaliacaoGrafico.vue'
+import { useRouter } from 'vuetify/lib/composables/router.mjs';
+import { logoutUsuario } from '@/api/composables/useUsuario';
+import router from '@/routers';
 
 const props = defineProps<{
     empresaCriada: number
 }>()
 
+const route = useRouter()
+function logout() {
+  logoutUsuario()
+  localStorage.removeItem('authUser')
+  router.push('/login')
+}
 const avaliacaoQuery = useAvaliacao(props.empresaCriada)
 
 function calcularConformidade(avaliacao: AvaliacaoResponse): number {
