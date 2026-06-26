@@ -18,3 +18,12 @@ export type UsuarioToken = {
     token: string,
     usuario: Usuario
 }
+
+export type UsuarioRequest = {
+    nome: string,
+    login: string
+    email: string,
+    senha: string,
+    empresas: EmpresaResponse[]
+}
+

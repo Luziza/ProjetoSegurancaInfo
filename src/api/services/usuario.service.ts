@@ -1,12 +1,12 @@
 import instance from "./http/axios"
-import type { Usuario, UsuarioLogin, UsuarioToken } from "@/types/usuario"
+import type { Usuario, UsuarioLogin, UsuarioRequest, UsuarioToken } from "@/types/usuario"
 
 
 const ENDPOINT = 'usuario'
 
 export default {
-  cadastrarUsuario(usuario: Usuario) {
-    return instance.post<Usuario>(`/${ENDPOINT}`, usuario)
+  cadastrarUsuario(usuario: UsuarioRequest) {
+    return instance.post<Usuario>(`/${ENDPOINT}/cadastroUsuario`, usuario)
   },
 
   loginUsuario(usuarioLogin: UsuarioLogin) {

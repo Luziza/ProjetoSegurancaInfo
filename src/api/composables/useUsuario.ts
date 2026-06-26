@@ -7,7 +7,7 @@ import respostaService from "../services/resposta.service";
 import type { Resposta } from "@/types/resposta";
 import usuarioService from "../services/usuario.service";
 import { setAuthToken } from "../services/http/axios";
-import type { Usuario, UsuarioLogin, UsuarioToken } from "@/types/usuario";
+import type { Usuario, UsuarioLogin, UsuarioRequest, UsuarioToken } from "@/types/usuario";
 
 
 export function useCreateUsuario(onFinish?: () => void) {
@@ -15,7 +15,7 @@ export function useCreateUsuario(onFinish?: () => void) {
   const { show } = useToast()
 
   return useMutation({
-    mutationFn: (usuario: Usuario) => usuarioService.cadastrarUsuario(usuario),
+    mutationFn: (usuario: UsuarioRequest) => usuarioService.cadastrarUsuario(usuario),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['respostas'] })
       show('Usuário criado com sucesso!', 'info')

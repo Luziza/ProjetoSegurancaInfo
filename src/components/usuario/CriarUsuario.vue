@@ -12,7 +12,6 @@ const form = reactive({
     email: '',
     senha: '',
     empresas: [],
-    id_usuario: 0
 })
 
 function enviar() {
@@ -24,7 +23,7 @@ function enviar() {
             }
         }
     )
-    
+
 }
 
 function limpar() {
@@ -37,57 +36,118 @@ function limpar() {
 </script>
 
 <template>
-        <div class="titulo">Cadastrar Usuário</div>
+    <div class="page">
+        <div class="card">
 
-        <form @submit.prevent="enviar">
-            <div class="inputs">
+            <!-- HEADER -->
+            <div class="header">
+                <div class="logo">
+                    <v-icon size="40" color="#0B1F44">mdi-shield-check</v-icon>
+                </div>
 
-                <v-text-field v-model="form.nome" label="Seu nome...." variant="outlined" density="compact"
+                <div class="titulo">Cadastrar Usuário</div>
+                <div class="subtitulo">Sistema de Diagnóstico de Conformidade</div>
+            </div>
+
+            <!-- FORM -->
+            <form @submit.prevent="enviar" class="form">
+
+                <v-text-field v-model="form.nome" label="Seu nome" variant="outlined" density="compact"
                     prepend-inner-icon="mdi-account" />
 
-
-                <v-text-field v-model="form.login" label="Login...." variant="outlined" density="compact"
+                <v-text-field v-model="form.login" label="Login" variant="outlined" density="compact"
                     prepend-inner-icon="mdi-login" />
 
-
-                <v-text-field v-model="form.email" label="E-mail...." variant="outlined" density="compact"
+                <v-text-field v-model="form.email" label="E-mail" variant="outlined" density="compact"
                     prepend-inner-icon="mdi-at" />
 
-                <v-text-field v-model="form.senha" label="Senha...." variant="outlined" density="compact"
+                <v-text-field v-model="form.senha" label="Senha" type="password" variant="outlined" density="compact"
                     prepend-inner-icon="mdi-lock" />
 
-            </div>
-
-            <div class="botoes">
-                <v-btn variant="text" color="#EB3939" @click="limpar">
-                    Cancelar
-                </v-btn>
-
-                <v-btn type="submit" variant="text" color="#00995C" :loading="usuarioMutation.isPending.value">
-                    Salvar
-                </v-btn>
-            </div>
-        </form>
+                <!-- LINK -->
+                <RouterLink to="/home" class="link">
+                    <v-icon size="18">mdi-home-outline</v-icon>
+                    Já possui conta? Entrar.
+                </RouterLink>
     
+
+                <!-- BOTÕES -->
+                <div class="botoes">
+                    <v-btn variant="text" color="#EB3939" @click="limpar">
+                        Limpar
+                    </v-btn>
+
+                    <v-btn type="submit" color="#0B5ED7" :loading="usuarioMutation.isPending.value">
+                        Salvar
+                    </v-btn>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </template>
 
 <style scoped>
-.titulo {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
+.page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4f6fb;
 }
 
-.inputs {
+.card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.logo {
+    margin-bottom: 10px;
+}
+
+.titulo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0b1f44;
+}
+
+.subtitulo {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+}
+
+.link {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.link a {
+    color: #0b5ed7;
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .botoes {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 16px;
 }
 </style>
