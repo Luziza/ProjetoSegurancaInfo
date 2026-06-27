@@ -21,7 +21,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: () => import('@/components/Primeiro.vue'),
+      component:() => import('@/components/Primeiro.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -34,14 +34,19 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    return { name: 'login' }
+router.beforeEach((to, from, next) => {
+  const user = localStorage.getItem('authUser')
+
+  if (to.meta.requiresAuth && !user) {
+    next({ name: 'login' })
+    return
   }
 
-  if (to.name === 'login' && isAuthenticated()) {
-    return { name: 'home' }
+  if (to.name === 'login' && user) {
+    next({ name: 'home' })
+    return
   }
+
+  next()
 })
-
 export default router 

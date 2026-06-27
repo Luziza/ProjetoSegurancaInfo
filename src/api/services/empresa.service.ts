@@ -8,7 +8,7 @@ export default {
     return instance.post<EmpresaResponse>(`/${ENDPOINT}/cadastrar`, empresa)
   },
 
-  listar() {
-    return instance.get<EmpresaResponse[]>(`/${ENDPOINT}`)
+  listar(id_usuario: number) {
+    return instance.get<EmpresaResponse[]>(`/${ENDPOINT}/usuario/${id_usuario}`)
   }
 }

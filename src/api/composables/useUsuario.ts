@@ -1,4 +1,4 @@
-import { useQueryClient, useMutation } from "@tanstack/vue-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/vue-query";
 import useToast from "./userToast";
 import type { AxiosResponse } from "axios";
 import type { EmpresaResponse } from "@/types/empresa";
@@ -8,6 +8,7 @@ import type { Resposta } from "@/types/resposta";
 import usuarioService from "../services/usuario.service";
 import { setAuthToken } from "../services/http/axios";
 import type { Usuario, UsuarioLogin, UsuarioRequest, UsuarioToken } from "@/types/usuario";
+import type { ComputedRef } from "vue";
 
 
 export function useCreateUsuario(onFinish?: () => void) {
@@ -27,10 +28,12 @@ export function useCreateUsuario(onFinish?: () => void) {
     }
   })
 }
+
 export function logoutUsuario() {
   setAuthToken(null)
   localStorage.removeItem('authUser')
 }
+
 export function useLoginUsuario(onFinish?: () => void) {
   const queryClient = useQueryClient()
   const { show } = useToast()
@@ -59,6 +62,16 @@ export function useLoginUsuario(onFinish?: () => void) {
 
     onError: () => {
       show('Erro ao realizar login', 'error')
+    }
+  })
+}
+
+export function useUsuario(id_usuario: number, p0: { enabled: ComputedRef<boolean>; }) {
+  return useQuery<Usuario>({
+    queryKey: ['usuario', id_usuario],
+    queryFn: async () => {
+      const res = await usuarioService.usuario(id_usuario)
+      return res.data
     }
   })
 }

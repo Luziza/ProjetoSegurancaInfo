@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEmpresa } from '@/api/composables/useEmpresa'
+import { useEmpresaCadastro } from '@/api/composables/useEmpresa'
 import useModulo from '@/api/composables/useModulo'
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -7,7 +7,7 @@ import Escolha from './Escolha.vue'
 import type { Usuario } from '@/types/usuario.ts'
 import { logoutUsuario } from '@/api/composables/useUsuario'
 
-const criarEmpresa = useEmpresa()
+const criarEmpresa = useEmpresaCadastro()
 const modulosMutation = useModulo()
 const abrirEscolha = ref(false)
 
@@ -21,42 +21,37 @@ const props = defineProps<{
   usuario?: Usuario
 }>()
 
-const storedUser = computed<Usuario>(() => {
-  const saved = localStorage.getItem('authUser')
 
+// DEPOIS — ref reativo, inicializado uma vez
+function carregarUsuarioInicial(): Usuario {
   if (props.usuario) {
     return props.usuario
   }
 
+  const saved = localStorage.getItem('authUser')
   if (saved) {
     try {
       return JSON.parse(saved) as Usuario
     } catch {
-      return {
-        id_usuario: 0,
-        nome: '',
-        email: '',
-        senha: '',
-        empresas: []
-      }
+      // fallback abaixo
     }
   }
 
   return {
-    id_usuario: 0,
+    idUsuario: 0,
     nome: '',
     email: '',
     senha: '',
     empresas: []
   }
-})
+}
 
-const usuario = storedUser
+const usuario = ref<Usuario>(carregarUsuarioInicial())
 
 const form = reactive({
   nome: '',
   cnpj: '',
-  id_usuario: storedUser.value.id_usuario
+  idUsuario: usuario.value.idUsuario
 })
 
 function enviar() {
@@ -64,8 +59,14 @@ function enviar() {
     { ...form },
     {
       onSuccess: (response) => {
-        console.log(response)
-        empresaCriada.value = response.data.idEmpresa
+        const novaEmpresa = response.data
+
+        empresaCriada.value = novaEmpresa.idEmpresa
+
+        usuario.value.empresas.push(novaEmpresa)
+        localStorage.setItem('authUser', JSON.stringify(usuario.value))
+
+        limpar()
       }
     }
   )
@@ -217,10 +218,6 @@ function limpar() {
             <p>
               Cadastre sua primeira empresa para começar a avaliação.
             </p>
-
-            <v-btn color="primary" @click="$el.querySelector('input')?.focus()">
-              Cadastrar empresa
-            </v-btn>
 
           </div>
 

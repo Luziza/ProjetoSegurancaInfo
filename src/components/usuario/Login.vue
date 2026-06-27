@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useEmpresa } from '@/api/composables/useEmpresa'
 import useModulo from '@/api/composables/useModulo'
 import { useCreateUsuario, useLoginUsuario } from '@/api/composables/useUsuario'
 import { computed, reactive, ref } from 'vue'
@@ -26,7 +25,7 @@ function enviar() {
 
                 usuario.value = response.data.usuario
                 abrirSite.value = true
-                router.push('/home')
+                router.replace('/home')
             }
         }
     )

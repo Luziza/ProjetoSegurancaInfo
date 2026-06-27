@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { useEmpresa } from '@/api/composables/useEmpresa'
 import { useCreateUsuario } from '@/api/composables/useUsuario'
 import { reactive, ref } from 'vue'
 import Primeiro from '../Primeiro.vue'
+import { useRouter } from 'vuetify/lib/composables/router.mjs'
+import router from '@/routers/index.ts'
 
 const usuarioMutation = useCreateUsuario()
 const abrirSite = ref(false)
+const route = useRouter()
 const form = reactive({
     nome: '',
     login: '',
@@ -19,11 +21,11 @@ function enviar() {
         { ...form },
         {
             onSuccess: () => {
-                abrirSite.value = true
+                limpar()
+                router.push('/home')
             }
         }
     )
-
 }
 
 function limpar() {
@@ -69,7 +71,7 @@ function limpar() {
                     <v-icon size="18">mdi-home-outline</v-icon>
                     Já possui conta? Entrar.
                 </RouterLink>
-    
+
 
                 <!-- BOTÕES -->
                 <div class="botoes">

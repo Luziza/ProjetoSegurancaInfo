@@ -42,43 +42,72 @@ function calcularMedia(avaliacoes: AvaliacaoResponse[]) {
     return Number((total / avaliacoes.length).toFixed(1))
 }
 
-const ultimasAvaliacoes = computed(() => {
-    const lista = avaliacaoQuery.data.value ?? []
+// --- Listas completas (usadas para os cálculos de média) ---
+const listaCompleta = computed(() => avaliacaoQuery.data.value ?? [])
 
-    return [...lista]
+const todasModulo1 = computed(() =>
+    listaCompleta.value.filter(a => a.tipo_pergunta === 1)
+)
+
+const todasModulo2 = computed(() =>
+    listaCompleta.value.filter(a => a.tipo_pergunta === 2)
+)
+
+// --- Listas limitadas (usadas apenas para exibição dos cards/gráficos dos módulos) ---
+const avaliacoesModulo1 = computed(() =>
+    [...todasModulo1.value]
         .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
         .slice(0, 3)
-})
+)
 
-const avaliacoesModulo1 = computed(() => {
-    const lista = avaliacaoQuery.data.value ?? []
-
-    return lista
-        .filter(a => a.tipo_pergunta === 1)
+const avaliacoesModulo2 = computed(() =>
+    [...todasModulo2.value]
         .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
         .slice(0, 3)
-})
+)
 
-const avaliacoesModulo2 = computed(() => {
-    const lista = avaliacaoQuery.data.value ?? []
-
-    return lista
-        .filter(a => a.tipo_pergunta === 2)
+// Usada só para checar se existe ALGUMA avaliação (estado vazio/loading)
+const ultimasAvaliacoes = computed(() =>
+    [...listaCompleta.value]
         .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
         .slice(0, 3)
+)
+
+// --- Médias: calculadas sobre a lista COMPLETA, não sobre os itens exibidos ---
+const mediaModulo1 = computed(() => calcularMedia(todasModulo1.value))
+const mediaModulo2 = computed(() => calcularMedia(todasModulo2.value))
+const mediaGeral = computed(() => calcularMedia(listaCompleta.value))
+
+// --- Card "Geral": combina a avaliação mais recente do Módulo 1 + Módulo 2 em UM único gráfico ---
+const ultimaModulo1 = computed(() => avaliacoesModulo1.value[0] ?? null)
+const ultimaModulo2 = computed(() => avaliacoesModulo2.value[0] ?? null)
+
+const avaliacaoCombinadaGeral = computed<AvaliacaoResponse | null>(() => {
+    const a1 = ultimaModulo1.value
+    const a2 = ultimaModulo2.value
+
+    if (!a1 && !a2) return null
+
+    const respostas = [
+        ...(a1?.respostas ?? []),
+        ...(a2?.respostas ?? []),
+    ]
+
+    const dataMaisRecente = [a1, a2]
+        .filter((a): a is AvaliacaoResponse => a !== null)
+        .reduce(
+            (max, a) => Math.max(max, new Date(a.data).getTime()),
+            0
+        )
+
+    // NOTE: ajuste os campos abaixo se o tipo AvaliacaoResponse exigir mais propriedades
+    return {
+        ...(a1 ?? a2),
+        id_avaliacao: -1,
+        data: new Date(dataMaisRecente),
+        respostas,
+    } as AvaliacaoResponse
 })
-
-const avaliacoesGerais = computed(() => {
-    const lista = avaliacaoQuery.data.value ?? []
-
-    return [...lista]
-        .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
-        .slice(0, 3)
-})
-
-const mediaModulo1 = computed(() => calcularMedia(avaliacoesModulo1.value))
-const mediaModulo2 = computed(() => calcularMedia(avaliacoesModulo2.value))
-const mediaGeral = computed(() => calcularMedia(avaliacoesGerais.value))
 </script>
 
 <template>
@@ -171,9 +200,9 @@ const mediaGeral = computed(() => calcularMedia(avaliacoesGerais.value))
                         <span class="media-badge">{{ mediaGeral }}% de conformidade</span>
                     </div>
 
-                    <v-row>
-                        <v-col v-for="avaliacao in avaliacoesGerais" :key="avaliacao.id_avaliacao" cols="12" md="4">
-                            <AvaliacaoGrafico :avaliacao="avaliacao" />
+                    <v-row v-if="avaliacaoCombinadaGeral" justify="center">
+                        <v-col cols="12" md="6">
+                            <AvaliacaoGrafico :avaliacao="avaliacaoCombinadaGeral" />
                         </v-col>
                     </v-row>
                 </section>

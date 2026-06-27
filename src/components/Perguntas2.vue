@@ -2,11 +2,14 @@
 import type { useModulosEscolhido } from '@/api/composables/useModulo'
 import { useCreateResposta } from '@/api/composables/useResposta'
 import { computed, ref, nextTick } from 'vue'
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   modulosEscolha: ReturnType<typeof useModulosEscolhido>
   empresaCriada: number
 }>()
+
+const router = useRouter()
 
 const respostaMutation = useCreateResposta()
 const respostas = ref<Record<number, string>>({})
@@ -67,7 +70,15 @@ const salvar = () => {
       nao_aplica: resposta === 'NAO_APLICA',
     })
   )
-  respostaMutation.mutate(payload)
+
+  respostaMutation.mutate(payload, {
+    onSuccess: () => {
+      router.push({
+        name: 'dashboard',
+        query: { empresaCriada: String(props.empresaCriada) }
+      })
+    }
+  })
 }
 </script>
 

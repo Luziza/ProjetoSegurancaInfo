@@ -1,7 +1,7 @@
 import type { EmpresaResponse } from "./empresa"
 
 export type Usuario = {
-    id_usuario: number,
+    idUsuario: number,
     nome: string,
     email: string,
     senha: string,
