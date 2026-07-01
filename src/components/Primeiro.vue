@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEmpresaCadastro } from '@/api/composables/useEmpresa'
+import { useEmpresaCadastro, useEmpresaDeletar } from '@/api/composables/useEmpresa'
 import useModulo from '@/api/composables/useModulo'
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -8,6 +8,7 @@ import type { Usuario } from '@/types/usuario.ts'
 import { logoutUsuario } from '@/api/composables/useUsuario'
 
 const criarEmpresa = useEmpresaCadastro()
+const deletarEmpresaMutation = useEmpresaDeletar()
 const modulosMutation = useModulo()
 const abrirEscolha = ref(false)
 
@@ -21,8 +22,6 @@ const props = defineProps<{
   usuario?: Usuario
 }>()
 
-
-// DEPOIS — ref reativo, inicializado uma vez
 function carregarUsuarioInicial(): Usuario {
   if (props.usuario) {
     return props.usuario
@@ -94,6 +93,27 @@ function limpar() {
   form.cnpj = ''
 }
 
+function confirmarExclusao(idEmpresa: number, nomeEmpresa: string) {
+  if (!confirm(`Tem certeza que deseja excluir "${nomeEmpresa}"? Essa ação apaga também as avaliações e respostas vinculadas.`)) {
+    return
+  }
+
+  deletarEmpresaMutation.mutate(idEmpresa, {
+    onSuccess: () => {
+      usuario.value.empresas = usuario.value.empresas.filter(
+        (e) => e.idEmpresa !== idEmpresa
+      )
+      localStorage.setItem('authUser', JSON.stringify(usuario.value))
+    },
+    onError: (error: any) => {
+      if (error?.response?.status === 409) {
+        alert('Não foi possível excluir esta empresa.')
+      } else {
+        alert('Erro ao excluir empresa. Tente novamente.')
+      }
+    }
+  })
+}
 </script>
 
 <template>
@@ -120,7 +140,6 @@ function limpar() {
       </v-btn>
     </header>
 
-
     <!-- CONTEÚDO -->
     <main class="content">
 
@@ -131,7 +150,6 @@ function limpar() {
             Avalie a conformidade com ISO 27001 e acompanhe seus resultados.
           </p>
         </div>
-
       </div>
 
       <!-- FORMULÁRIO -->
@@ -191,9 +209,17 @@ function limpar() {
                   Questionário
                 </v-btn>
 
-                <v-btn color="primary" @click="selecionarEmpresaDash(empresa.idEmpresa)">
+                <v-btn color="primary" class="mr-2" @click="selecionarEmpresaDash(empresa.idEmpresa)">
                   Dashboard
                 </v-btn>
+
+                <v-btn
+                  icon="mdi-delete-outline"
+                  color="error"
+                  variant="text"
+                  :loading="deletarEmpresaMutation.isPending.value"
+                  @click="confirmarExclusao(empresa.idEmpresa, empresa.nome)"
+                />
 
               </template>
 
@@ -233,7 +259,6 @@ function limpar() {
       <Escolha :modulosMutation="modulosMutation" :empresaCriada="empresaCriada" @fechar="abrirEscolha = false" />
     </v-card>
   </v-dialog>
-
 
 </template>
 

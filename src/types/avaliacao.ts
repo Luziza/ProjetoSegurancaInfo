@@ -5,6 +5,6 @@ export type AvaliacaoResponse = {
     data: Date
     idEmpresa: number
     tipo_pergunta: number
-    nomeModulo: String
+    nomeModulo: string
     respostas: Resposta[]
 }

@@ -2,6 +2,7 @@ import { useQueryClient, useMutation, useQuery } from "@tanstack/vue-query";
 import useToast from "./userToast";
 import type { EmpresaRequest, EmpresaResponse } from "@/types/empresa";
 import empresaService from "../services/empresa.service";
+import instance from "../services/http/axios";
 
 
 export function useEmpresaCadastro(onFinish?: () => void) {
@@ -25,14 +26,13 @@ export function useEmpresaCadastro(onFinish?: () => void) {
   })
 }
 
-// export default function useEmpresa() {
-//   const { show } = useToast()
+export function useEmpresaDeletar() {
+  const queryClient = useQueryClient()
 
-//   return useQuery<EmpresaResponse[]>({
-//     queryKey: ['modulos'],
-//     queryFn: async () => {
-//       const response = await empresaService.listar()
-//       return response.data
-//     },
-//   })
-// }
+  return useMutation({
+    mutationFn: (idEmpresa: number) => (empresaService.deletar(idEmpresa)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['empresas'] })
+    }
+  })
+}

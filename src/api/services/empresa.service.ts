@@ -10,5 +10,9 @@ export default {
 
   listar(id_usuario: number) {
     return instance.get<EmpresaResponse[]>(`/${ENDPOINT}/usuario/${id_usuario}`)
+  },
+
+  deletar(id_empresa: number) {
+    return instance.delete(`/${ENDPOINT}/deletar/${id_empresa}`)
   }
 }
