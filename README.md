@@ -14,21 +14,13 @@ Durante uma avaliação, o auditor seleciona a organização e a norma desejada,
 
 ## Como executar
 
-- `Front-End
+- Front-End
 ```bash
 npm install
 npm run dev
 ```
 
-- `Back-End
+- Back-End
 ```bash
 mvn mvn spring-boot:run
 ```
-
-
-This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
-
-- Contribute to Vuetify and ecosystem projects: https://github.com/vuetifyjs
-- Request enterprise support: https://support.vuetifyjs.com/
-- Sponsor on GitHub: https://github.com/sponsors/vuetifyjs
-- Support on Open Collective: https://opencollective.com/vuetify
