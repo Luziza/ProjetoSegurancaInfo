@@ -8,6 +8,12 @@ O sistema foi desenvolvido com o objetivo de apoiar organizações na avaliaçã
 
 Durante uma avaliação, o auditor seleciona a organização e a norma desejada, respondendo a um conjunto de perguntas associadas aos controles da norma. Para cada pergunta, é possível registrar a situação de conformidade (Sim, Não, Não se aplica ou Encaminhado). Com base nas informações coletadas, o sistema calcula indicadores de conformidade, apresenta dashboards com métricas e gráficos, gera relatórios detalhados e permite comparar auditorias realizadas em diferentes períodos, auxiliando no acompanhamento da evolução da organização e na identificação de oportunidades de melhoria para o atendimento aos requisitos das normas. 
 
+## Tecnologias usadas
+
+- Front-End: Vue.js e TypeCcript
+- Backend: Java, Spring Boot, JPA
+- Banco de dados: MySQL
+
 ## Diagrama
 
 <img width="726" height="748" alt="image" src="https://github.com/user-attachments/assets/4ca3ca47-1661-4851-848e-d1dfc3b037a3" />
