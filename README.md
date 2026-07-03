@@ -1,20 +1,12 @@
 # projetoifront
 
-Scaffolded with Vuetify CLI.
+## Diagnóstico de Conformidade ISO/IEC 27001 e 27701
 
-## ❗️ Documentation
+O sistema foi desenvolvido com o objetivo de apoiar organizações na avaliação da conformidade com os requisitos das normas ISO/IEC 27001 e ISO/IEC 27701, fornecendo uma ferramenta para realização de auditorias internas e diagnósticos de maturidade em segurança da informação e privacidade. A solução é composta por dois módulos principais: um destinado à avaliação da conformidade com a ISO/IEC 27001, utilizando como base os controles descritos na ISO/IEC 27002:2022, e outro voltado à avaliação da ISO/IEC 27701, que complementa o Sistema de Gestão da Segurança da Informação (SGSI) com requisitos específicos para o gerenciamento da privacidade e proteção de dados pessoais.
 
-- Primary docs: https://vuetifyjs.com/
-- Getting started guide: https://vuetifyjs.com/en/getting-started/installation/
-- Community support: https://community.vuetifyjs.com/
-- Issue tracker: https://issues.vuetifyjs.com/
+## Descrição do sistema
 
-## 🧱 Stack
-
-- Framework: Vue 3 + Vite
-- UI Library: Vuetify
-- Language: TypeScript
-- Package manager: npm
+Durante uma avaliação, o auditor seleciona a organização e a norma desejada, respondendo a um conjunto de perguntas associadas aos controles da norma. Para cada pergunta, é possível registrar a situação de conformidade (Sim, Não, Não se aplica ou Encaminhado). Com base nas informações coletadas, o sistema calcula indicadores de conformidade, apresenta dashboards com métricas e gráficos, gera relatórios detalhados e permite comparar auditorias realizadas em diferentes períodos, auxiliando no acompanhamento da evolução da organização e na identificação de oportunidades de melhoria para o atendimento aos requisitos das normas. 
 
 ## 🧭 Start Here
 
