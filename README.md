@@ -22,5 +22,5 @@ npm run dev
 
 - Back-End
 ```bash
-mvn mvn spring-boot:run
+mvn spring-boot:run
 ```
