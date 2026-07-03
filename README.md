@@ -13,6 +13,7 @@ Durante uma avaliação, o auditor seleciona a organização e a norma desejada,
 - Front-End: Vue.js e TypeCcript
 - Backend: Java, Spring Boot, JPA
 - Banco de dados: MySQL
+- Hospedagem: Firebase e Render
 
 ## Diagrama
 
