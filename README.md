@@ -10,7 +10,7 @@ Durante uma avaliação, o auditor seleciona a organização e a norma desejada,
 
 ## Diagrama
 
-
+<img width="726" height="748" alt="image" src="https://github.com/user-attachments/assets/4ca3ca47-1661-4851-848e-d1dfc3b037a3" />
 
 ## Como executar
 
