@@ -8,56 +8,23 @@ O sistema foi desenvolvido com o objetivo de apoiar organizações na avaliaçã
 
 Durante uma avaliação, o auditor seleciona a organização e a norma desejada, respondendo a um conjunto de perguntas associadas aos controles da norma. Para cada pergunta, é possível registrar a situação de conformidade (Sim, Não, Não se aplica ou Encaminhado). Com base nas informações coletadas, o sistema calcula indicadores de conformidade, apresenta dashboards com métricas e gráficos, gera relatórios detalhados e permite comparar auditorias realizadas em diferentes períodos, auxiliando no acompanhamento da evolução da organização e na identificação de oportunidades de melhoria para o atendimento aos requisitos das normas. 
 
-## 🧭 Start Here
+## Diagrama
 
-- Main entry: `src/main.ts`
-- Main app component: `src/App.vue`
-- Main styles: `src/styles/`
-- Plugin setup: `src/plugins/`
 
-## 📁 Project Structure
 
-- `src/main.ts` — application entry point
-- `src/App.vue` — root component
-- `src/components/` — reusable Vue components
-- `src/plugins/` — plugin registration and setup
-- `src/styles/` — global styles and theme settings
-- `public/` — static public files
+## Como executar
 
-## ✨ Enabled Features
-
-- Base setup
-
-## 💿 Install
-
-Use your selected package manager (npm) to install dependencies:
-
-```bash
-npm install
-```
-
-## 🚀 Quick Start
-
+- `Front-End
 ```bash
 npm install
 npm run dev
 ```
 
-## 🏗️ Build
-
+- `Back-End
 ```bash
-npm run build
+mvn mvn spring-boot:run
 ```
 
-## 🧪 Available Scripts
-
-- `npm run dev`
-- `npm run build`
-- `npm run preview`
-- `npm run build-only`
-- `npm run type-check`
-
-## 💪 Support Vuetify Development
 
 This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
 
